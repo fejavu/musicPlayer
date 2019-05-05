@@ -5,118 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>MusicPlayer</title>
+  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/index.css">
+  <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="https://at.alicdn.com/t/font_1172925_s5dknrdloom.css">
   <link href="https://fonts.googleapis.com/css?family=Noto+Sans+TC" rel="stylesheet">
-
-  <style>
-    /* common style */
-    *{
-      margin: 0;
-      padding: 0;
-      font-family: 'Noto Sans TC', sans-serif;
-    }
-    ul,
-    li {
-      list-style: none;
-    }
-    .clearfix::after {
-      content: '';
-      clear: both;
-      display: block;
-    }
-
-    .playerBox {
-      box-sizing: border-box;
-      background: #333;
-      margin: 100px auto;
-      width: 400px;
-      color: #ccc;
-      border-radius: 5px;
-      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-    }
-
-    .musicPanel {
-      border-bottom: 1px solid #666;
-      padding: 10px;
-    }
-    .ctrl {
-      float: left;
-      /* border:1px black solid;       */
-      padding: 5px;
-      font: 20px ;
-    }
-    .backward,
-    .pause,
-    .forward{
-      border:1px #ccc solid;
-      padding:5px;
-      border-radius: 50%;
-    }
-    .backward:hover,
-    .forward:hover,
-    .pause:hover {
-      border: 1px #888 solid;
-      cursor: pointer;
-    }
-    .pause {
-      margin: 0 10px;
-      padding: 7px;
-      border: 1px #ccc solid;
-      border-radius: 50%;
-    }
-
-    .info {
-      margin-left: 150px;
-      /* border:1px black solid; */
-      font-size: 16px;
-    }
-    .artist {
-      font-size: 12px;
-      color: #777;
-    }
-    .process {
-      margin-top: 20px;
-      text-align: right;
-      position: relative;
-    }
-    .totalProcess {
-      width: 100%;
-      height: 4px;
-      background: #ccc;
-      border-radius: 4px;
-    }
-
-    .currentProcess {
-      width: 33%;
-      height: 4px;
-      background: #E70009;
-      border-radius: 4px;
-      box-shadow: rgba(0,0,0,.1);
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
-
-    .time {
-      margin-top: 3px;
-      font-size: 12px;
-    }
-
-    .playList {
-      padding: 5px;
-      padding-left: 10px;
-    }
-
-    .playList li {
-      font-size: 14px;
-      /* border: 1px #ccc solid; */
-    }
-    .playList .duration {
-      float: right;
-      margin-right: 5px;
-      font-size: 14px;
-    }
-  </style>
 </head>
 <body>
   <div class="playerBox">
@@ -128,100 +21,21 @@
           <span class="forward  iconfont icon-forward"></span>
         </div>
         <div class="info">
-          <div class="name">Captain Nina</div>
-          <div class="artist">Graham Reynolds</div>
+          <div class="name"></div>
+          <div class="artist"></div>
         </div>
       </div>
       <div class="process">
         <div class="totalProcess"></div>
         <div class="currentProcess"></div>
-        <div class="time">3:05</div>
+        <div class="time"></div>
       </div>
     </div>
-    <ul class="playList clearfix">
-      <li class="duration">4:35</li>
-      <li>My song - author</li>
+    <ul class="playList">
+      <!-- <li class="duration">4:35</li> -->
+      <!-- <li class="selected musicList">My song - author</li> -->
     </ul>
   </div>
-  <script>
-
-    var currentIndex = 0;
-    var audio = new Audio();
-    audio.autoplay = true;
-
-    getMusicList(function(list){
-      loadMusic(list[currentIndex]);
-      // console.log(list);
-      // var song = list[1];
-      // var audioObject = new Audio(song.src);
-      // audioObject.play();
-    })
-
-    audio.ontimeupdate = function(){
-      $('.currentProcess').style.width = (this.currentTime/this.duration)*100+'%';
-      // console.log(musicObj.duration);
-      // console.log(min);
-      // console.log(sec);
-      // $('.time').style.color = '#E70009';
-
-    }
-
-    audio.onplay = function() {
-      clock =setInterval(function(){
-        var min = Math.floor(audio.currentTime / 60) + '';
-        var sec = Math.floor(audio.currentTime % 60) + '';
-        sec = sec.length === 2 ? sec:'0' + sec;
-        $('.time').innerText = min + ':' + sec;
-      },1000)
-    }
-    audio.onpause = function() {
-      clearInterval(clock);
-    }
-    
-    $('.pause').onclick = function() {
-      if(audio.paused){
-        audio.play();
-        $('.pause').classList.remove('icon-stop');
-        $('.pause').classList.add('icon-music-icon_pause');
-      }else {
-        audio.pause();
-        $('.pause').classList.remove('icon-music-icon_pause');
-        $('.pause').classList.add('icon-stop');
-      }
-
-    }
-
-    function $(selector) {
-      return document.querySelector(selector);
-    }
-
-    function getMusicList(callback) {
-      var xhr = new XMLHttpRequest();
-      xhr.open('GET','/music.json',true);
-      xhr.onload = function(){
-        if((xhr.status >= 200 && xhr.status<300)|| xhr.status==304){
-          callback(JSON.parse(this.responseText));
-        }else{
-          console.log("failed to get data");
-        }
-      }
-      xhr.onerror = function(){
-        console.log('network error');
-      }
-      xhr.send();
-    }
-
-    function loadMusic(musicObj) {
-      // console.log('begin to play',musicObj);
-      audio.src = musicObj.src;
-      $('.name').innerText = musicObj.title;
-      $('.artist').innerText = musicObj.author;
-
-    }
-
-
-
-
-  </script>
+  <script src="js/index.js"></script>
 </body>
 </html>
