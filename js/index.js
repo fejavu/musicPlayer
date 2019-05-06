@@ -13,8 +13,8 @@ function $$(selector) {
 
 getMusicList(function(list){
   musicList = list;
-  generateList(list); //
-  loadMusic(list[currentIndex]);
+  generateList(list); // above the loadMusic function
+  loadMusic(musicList[currentIndex]);
 })
 
 audio.ontimeupdate = function(){
@@ -46,7 +46,7 @@ audio.onended = function () {
   loadMusic(musicList[currentIndex]);
 }
 
-$('.pause').onclick = function() {
+$('.pause').onclick = function (){
   if(audio.paused){
     audio.play();
     $('.pause').classList.remove('icon-stop');
@@ -118,16 +118,22 @@ function loadMusic(musicObj) {
   var musicUList = $('.playList');
   audio.src = musicObj.src;
   audio.play();
+
   $('.name').innerText = musicObj.title;
   $('.artist').innerText = musicObj.author;
   $('.cover').style.backgroundImage = 'url('+ musicObj.img +')';
   for(var i=0;i< (musicUList).children.length;i++) {
     musicUList.children[i].classList.remove('selected');
   }
-    console.log('currentIndex: ' + currentIndex);
-    console.log('typeof: ' + typeof(currentIndex))
-    console.log((musicUList.children[currentIndex]));
+    // console.log('currentIndex: ' + currentIndex);
+    // console.log('typeof: ' + typeof(currentIndex))
+    // console.log((musicUList.children[currentIndex]));
     musicUList.children[currentIndex].classList.add('selected');
+
+    if($('.icon-stop')) {
+      $('.pause').classList.remove('icon-stop');
+      $('.pause').classList.add('icon-music-icon_pause');
+    }
 }
   
 function generateList(list) {
