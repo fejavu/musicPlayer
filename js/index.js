@@ -120,7 +120,7 @@ function loadMusic(musicObj) {
   audio.play();
   $('.name').innerText = musicObj.title;
   $('.artist').innerText = musicObj.author;
-
+  $('.cover').style.backgroundImage = 'url('+ musicObj.img +')';
   for(var i=0;i< (musicUList).children.length;i++) {
     musicUList.children[i].classList.remove('selected');
   }
