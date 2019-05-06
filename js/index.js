@@ -3,10 +3,18 @@ var currentIndex = 0;
 var audio = new Audio();
 audio.autoplay = true;
 
+function $(selector) {
+  return document.querySelector(selector);
+}
+
+function $$(selector) {
+  return document.querySelectorAll(selector);
+}
+
 getMusicList(function(list){
   musicList = list;
+  generateList(list); //
   loadMusic(list[currentIndex]);
-  generateList(list);
 })
 
 audio.ontimeupdate = function(){
@@ -83,18 +91,11 @@ $('.playList').addEventListener('click', function(e){
         currentIndex = i;
       }
     }
-    console.log(currentIndex);
+    // console.log(currentIndex);
     loadMusic(musicList[currentIndex]);
   }
 })
 
-function $(selector) {
-  return document.querySelector(selector);
-}
-
-function $$(selector) {
-  return document.querySelectorAll(selector);
-}
 
 function getMusicList(callback) {
   var xhr = new XMLHttpRequest();
@@ -112,28 +113,28 @@ function getMusicList(callback) {
   xhr.send();
 }
 
-var musicUList = $('.playList');
 
 function loadMusic(musicObj) {
+  var musicUList = $('.playList');
   audio.src = musicObj.src;
   audio.play();
   $('.name').innerText = musicObj.title;
   $('.artist').innerText = musicObj.author;
 
   for(var i=0;i< (musicUList).children.length;i++) {
-    musicUList.children[i].classList.re('selected');
+    musicUList.children[i].classList.remove('selected');
   }
     console.log('currentIndex: ' + currentIndex);
     console.log('typeof: ' + typeof(currentIndex))
     console.log((musicUList.children[currentIndex]));
-    // musicUList.children[currentIndex].classList.add('selected');
+    musicUList.children[currentIndex].classList.add('selected');
 }
-
+  
 function generateList(list) {
-  for(var i=0;i<list.length;i++) {
-    var musicItem = document.createElement('li');
-    musicItem.classList.add('musicList');
-    musicItem.innerText = list[i].title + ' - ' + list[i].author;
-    $('.playList').appendChild(musicItem);
-  }
+    for(var i=0;i<list.length;i++) {
+      var musicItem = document.createElement('li');
+      musicItem.classList.add('musicList');
+      musicItem.innerText = list[i].title + ' - ' + list[i].author;
+      $('.playList').appendChild(musicItem);
+    }
 }
